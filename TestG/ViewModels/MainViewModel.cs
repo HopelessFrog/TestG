@@ -93,7 +93,6 @@ public partial class MainViewModel : ObservableObject
         bool isValid = Validator.IsValid(window);
         if (!isValid)
             return;
-        RichBoxString = "";
         var args = GetArgs();
         GenTestCase(args);
     }

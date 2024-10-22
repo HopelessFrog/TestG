@@ -1,0 +1,290 @@
+﻿<Window
+    x:Class="AutoTester.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:local="clr-namespace:AutoTester"
+    mc:Ignorable="d"
+    x:Name="this"
+    Title="MainWindow"
+    Height="720"
+    Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid
+            Grid.Column="0">
+
+            <materialDesign:Card
+                Margin="5"
+                UniformCornerRadius="15">
+                <StackPanel
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    Orientation="Vertical">
+
+                    <GroupBox
+                        Style="{StaticResource MaterialDesignCardGroupBox}"
+                        Margin="5"
+                        Header="Настройки генератора тест-кейсов">
+                        <StackPanel
+                            Orientation="Vertical">
+                            <materialDesign:NumericUpDown
+                                Value="{Binding TestCaseCount}"
+                                Minimum="1"
+                                Margin="5"
+                                Padding="0"
+                                MinHeight="50"
+                                materialDesign:HintAssist.Foreground="Black"
+                                
+                                PreviewTextInput="TextBox_PreviewPositive"
+                                materialDesign:HintAssist.Hint="Количество тест-кейсов"
+                                materialDesign:HintAssist.IsFloating="True">
+                                <materialDesign:NumericUpDown.IncreaseContent>
+                                    <Border
+                                        BorderBrush="{DynamicResource MaterialDesign.Brush.Foreground}"
+                                        BorderThickness="1"
+                                        CornerRadius="20">
+                                        <materialDesign:PackIcon
+                                            Kind="ArrowUp" />
+                                    </Border>
+                                </materialDesign:NumericUpDown.IncreaseContent>
+                                <materialDesign:NumericUpDown.DecreaseContent>
+                                    <Border
+                                        BorderBrush="{DynamicResource MaterialDesign.Brush.Foreground}"
+                                        BorderThickness="1"
+                                        CornerRadius="20">
+                                        <materialDesign:PackIcon
+                                            Kind="ArrowDown" />
+                                    </Border>
+                                </materialDesign:NumericUpDown.DecreaseContent>
+                            </materialDesign:NumericUpDown>
+                            <StackPanel
+                                Orientation="Horizontal"
+                                HorizontalAlignment="Center">
+
+                                <Label
+                                    Content="Негатитвные" />
+                                <ToggleButton
+                                    IsChecked="{Binding IsPositive}"
+                                    Width="60"
+                                    Style="{StaticResource MaterialDesignSwitchToggleButton}"
+                                    ToolTip="MaterialDesignSwitchToggleButton with Custom Track Background">
+                                    <materialDesign:ToggleButtonAssist.SwitchTrackOnBackground>
+                                        <SolidColorBrush
+                                            Color="Green" />
+                                    </materialDesign:ToggleButtonAssist.SwitchTrackOnBackground>
+                                    <materialDesign:ToggleButtonAssist.SwitchTrackOffBackground>
+                                        <SolidColorBrush
+                                            Color="Red" />
+                                    </materialDesign:ToggleButtonAssist.SwitchTrackOffBackground>
+                                </ToggleButton>
+
+                                <Label
+                                    Content="Позтивные" />
+
+                            </StackPanel>
+                            <StackPanel
+                                HorizontalAlignment="Center"
+                                IsEnabled="{Binding IsPositive, Converter={StaticResource InvertBooleanConverter}}" Orientation="Horizontal">
+                                <Label
+                                    Margin="3"
+                                    VerticalAlignment="Top"
+                                    Style="{StaticResource MaterialDesignLabel}"
+                                    Content="Корректный шаг интегрирования" />
+                                <CheckBox IsChecked ="{Binding Correct}"></CheckBox>
+                            </StackPanel>
+                            <TextBox
+                                LostFocus ="TextBox_LostFocus"
+                                materialDesign:HintAssist.Foreground="Black"
+                                Margin="5,5,5,15"
+                                Text="{Binding Path=Eps, ConverterCulture=ru-RU}"
+                                VerticalAlignment="Center"
+                                PreviewTextInput="TextBox_PreviewPositiveDouble"
+                                materialDesign:HintAssist.Hint="Допустимая погрешность"
+                                Style="{StaticResource MaterialDesignFilledTextBox}" />
+
+                        </StackPanel>
+
+                    </GroupBox>
+
+                    <GroupBox
+                        Style="{StaticResource MaterialDesignCardGroupBox}"
+                        Margin="5"
+                        Header="Исходные данные">
+                        <StackPanel
+                            Orientation="Vertical">
+
+                            <TextBox
+                                LostFocus="TextBox_LostFocus"
+                                Margin="5,5,5,15"
+                                Text="{Binding Path=LeftLimit, ConverterCulture=ru-RU}"
+                                VerticalAlignment="Center"
+                                PreviewTextInput="TextBox_Preview"
+                                materialDesign:HintAssist.Foreground="Black"
+                                materialDesign:HintAssist.Hint="Левая граница диапазона"
+                                Style="{StaticResource MaterialDesignFilledTextBox}" />
+                            <TextBox
+                                LostFocus="TextBox_LostFocus"
+                                materialDesign:HintAssist.Foreground="Black"
+                                Margin="5,5,5,15"
+                                Text="{Binding Path=RightLimit, ConverterCulture=ru-RU}"
+                                VerticalAlignment="Center"
+                                PreviewTextInput="TextBox_Preview"
+                                materialDesign:HintAssist.Hint="Правая граница диапазона"
+                                Style="{StaticResource MaterialDesignFilledTextBox}" />
+                            <ComboBox
+                                materialDesign:HintAssist.Foreground="Black"
+                                Margin="5,5,5,15"
+                                materialDesign:HintAssist.Hint="Метод интегрирования"
+                                SelectedIndex="{Binding Method}"
+                                Style="{StaticResource MaterialDesignFilledComboBox}">
+                                <ComboBoxItem>Симпсона</ComboBoxItem>
+                                <ComboBoxItem>Трапеции</ComboBoxItem>
+                                <ComboBoxItem>Монте-Карло</ComboBoxItem>
+                            </ComboBox>
+                            <TextBox
+                                materialDesign:HintAssist.Foreground="Black"
+                                
+                                materialDesign:HintAssist.Background="White"
+                                TextWrapping="Wrap"
+                                VerticalScrollBarVisibility="Auto"
+                                Margin="5,5,5,15"
+                                Text="{Binding Path=Args}"
+                                VerticalAlignment="Center"
+                                PreviewTextInput="TextBox_PreviewSpace"
+                                materialDesign:HintAssist.Hint="Коэффициенты полинома"
+                                Style="{StaticResource MaterialDesignOutlinedTextBox}" />
+                        </StackPanel>
+
+                    </GroupBox>
+
+                    <StackPanel
+                        Orientation="Vertical">
+                        <Button
+                            Margin="5"
+                            Content="Создать тесты"
+                            VerticalAlignment="Center"
+                            Command="{Binding TestCommand}"
+                            CommandParameter="{Binding ElementName=this}" />
+
+                    </StackPanel>
+                </StackPanel>
+            </materialDesign:Card>
+        </Grid>
+        <Grid
+            Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition
+                    Height="9*" />
+                <RowDefinition />
+
+            </Grid.RowDefinitions>
+
+            <GroupBox
+                Grid.Row="0"
+                Style="{StaticResource MaterialDesignCardGroupBox}"
+                Margin="5"
+                Header="Вывод">
+                <TextBox
+                    Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                    IsReadOnly="True"
+                    AcceptsReturn="True"
+                    VerticalScrollBarVisibility="Auto"
+                    HorizontalScrollBarVisibility="Auto"
+                    Text="{Binding Path=RichBoxString}" />
+            </GroupBox>
+            <Button
+                Grid.Row="1"
+                Margin="5"
+                Content="Экспортировать"
+                VerticalAlignment="Center"
+                Command="{Binding ExportCommand}" />
+        </Grid>
+
+        <GroupBox
+            Style="{StaticResource MaterialDesignCardGroupBox}"
+            Grid.Column="1"
+            Margin="5"
+            Header="Тест-кейсы">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition
+                        Height="0.1*" />
+                    <RowDefinition />
+                    <RowDefinition
+                        Height="0.1*" />
+                </Grid.RowDefinitions>
+                <StackPanel
+                    VerticalAlignment="Center"
+                    Orientation="Horizontal"
+                    Grid.Row="0">
+                    <Viewbox
+                        VerticalAlignment="Center">
+
+                        <Label
+                            VerticalAlignment="Center"
+                            Margin="3"
+                            Content="Выбрать все" />
+                    </Viewbox>
+                    <ToggleButton
+                        Margin="3"
+                        Content="X"
+                        IsChecked="{Binding SelectAll}"
+                        Style="{StaticResource MaterialDesignActionToggleButton}" />
+                </StackPanel>
+                <materialDesign:Card
+                    Grid.Row="1">
+
+                    <ListBox
+                        x:Name="propList"
+                        ItemsSource="{Binding Cases}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <DockPanel
+                                    Margin="5">
+                                    <CheckBox
+                                        IsChecked="{Binding Use}" />
+                                    <TextBlock
+                                        Margin="10,0,0,0"
+                                        Text="{Binding TestHeader}"
+                                        TextWrapping="Wrap" />
+                                </DockPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </materialDesign:Card>
+                <StackPanel
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal"
+                    Grid.Row="2">
+                   
+                    <Button
+                        Command="{Binding DeleteCommand}"
+                        Margin="4"
+                        IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+                        Style="{StaticResource MaterialDesignFloatingActionMiniSecondaryDarkButton}"
+                        ToolTip="MaterialDesignFloatingActionMiniSecondaryDarkButton">
+                        <materialDesign:PackIcon
+                            Kind="Delete" />
+                    </Button>
+                    <Button
+                        Command="{Binding StartTestCommand}"
+                        Margin="4"
+                        IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+                        Style="{StaticResource MaterialDesignFloatingActionMiniSecondaryDarkButton}"
+                        ToolTip="MaterialDesignFloatingActionMiniSecondaryDarkButton">
+                        <materialDesign:PackIcon
+                            Kind="Play" />
+                    </Button>
+                </StackPanel>
+
+            </Grid>
+        </GroupBox>
+    </Grid>
+</Window>

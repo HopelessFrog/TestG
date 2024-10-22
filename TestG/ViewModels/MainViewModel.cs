@@ -174,7 +174,7 @@ public partial class MainViewModel : ObservableObject
 
     private void GenTestCase(double[] args)
     {
-
+        var message = "";
         var errors = false;
         var rnd = new Random();
         for (int i = 0; i < TestCaseCount; i++)
@@ -241,12 +241,13 @@ public partial class MainViewModel : ObservableObject
                 Use = false,
             });
             errors = !isPos;
+            message = expectedMessage;
         }
 
         if (IsPositive && errors)
         {
 
-            MessageBox.Show($"{errors}.Тип тестов автоматически изменён на негативный!");
+            MessageBox.Show($"{message}.Тип тестов автоматически изменён на негативный!");
         }
         if (!IsPositive && !errors)
         {

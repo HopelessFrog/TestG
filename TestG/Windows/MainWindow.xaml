@@ -73,8 +73,7 @@
                                 <ToggleButton
                                     IsChecked="{Binding IsPositive}"
                                     Width="60"
-                                    Style="{StaticResource MaterialDesignSwitchToggleButton}"
-                                    ToolTip="MaterialDesignSwitchToggleButton with Custom Track Background">
+                                    Style="{StaticResource MaterialDesignSwitchToggleButton}">
                                     <materialDesign:ToggleButtonAssist.SwitchTrackOnBackground>
                                         <SolidColorBrush
                                             Color="Green" />

@@ -41,7 +41,7 @@
                                 Padding="0"
                                 MinHeight="50"
                                 materialDesign:HintAssist.Foreground="Black"
-                                
+
                                 PreviewTextInput="TextBox_PreviewPositive"
                                 materialDesign:HintAssist.Hint="Количество тест-кейсов"
                                 materialDesign:HintAssist.IsFloating="True">
@@ -90,16 +90,17 @@
                             </StackPanel>
                             <StackPanel
                                 HorizontalAlignment="Center"
-                                IsEnabled="{Binding IsPositive, Converter={StaticResource InvertBooleanConverter}}" Orientation="Horizontal">
+                                IsEnabled="{Binding IsPositive, Converter={StaticResource InvertBooleanConverter}}"
+                                Orientation="Horizontal">
                                 <Label
                                     Margin="3"
                                     VerticalAlignment="Top"
                                     Style="{StaticResource MaterialDesignLabel}"
                                     Content="Корректный шаг интегрирования" />
-                                <CheckBox IsChecked ="{Binding Correct}"></CheckBox>
+                                <CheckBox IsChecked="{Binding Correct}"></CheckBox>
                             </StackPanel>
                             <TextBox
-                                LostFocus ="TextBox_LostFocus"
+                                LostFocus="TextBox_LostFocus"
                                 materialDesign:HintAssist.Foreground="Black"
                                 Margin="5,5,5,15"
                                 Text="{Binding Path=Eps, ConverterCulture=ru-RU}"
@@ -120,10 +121,10 @@
                             Orientation="Vertical">
 
                             <TextBox
-                                LostFocus="TextBox_LostFocus"
                                 Margin="5,5,5,15"
                                 Text="{Binding Path=LeftLimit, ConverterCulture=ru-RU}"
                                 VerticalAlignment="Center"
+                                LostFocus="TextBox_LostFocus"
                                 PreviewTextInput="TextBox_Preview"
                                 materialDesign:HintAssist.Foreground="Black"
                                 materialDesign:HintAssist.Hint="Левая граница диапазона"
@@ -149,7 +150,7 @@
                             </ComboBox>
                             <TextBox
                                 materialDesign:HintAssist.Foreground="Black"
-                                
+
                                 materialDesign:HintAssist.Background="White"
                                 TextWrapping="Wrap"
                                 VerticalScrollBarVisibility="Auto"
@@ -262,7 +263,7 @@
                     HorizontalAlignment="Right"
                     Orientation="Horizontal"
                     Grid.Row="2">
-                   
+
                     <Button
                         Command="{Binding DeleteCommand}"
                         Margin="4"

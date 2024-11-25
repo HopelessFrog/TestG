@@ -13,34 +13,30 @@ namespace AutoTester;
 
 public partial class MainViewModel : ObservableObject
 {
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(StartTestCommand))]
+    [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(StartTestCommand))]
     List<TestCase> cases = new();
-    [NotifyCanExecuteChangedFor(nameof(TestCommand))]
-    [ObservableProperty]
+
+    [NotifyCanExecuteChangedFor(nameof(TestCommand))] [ObservableProperty]
     private int testCaseCount = 1;
-    [NotifyCanExecuteChangedFor(nameof(TestCommand))]
-    [ObservableProperty]
+
+    [NotifyCanExecuteChangedFor(nameof(TestCommand))] [ObservableProperty]
     private double leftLimit = 0;
-    [NotifyCanExecuteChangedFor(nameof(TestCommand))]
-    [ObservableProperty]
+
+    [NotifyCanExecuteChangedFor(nameof(TestCommand))] [ObservableProperty]
     private double rightLimit = 0;
-    [ObservableProperty]
-    private int method = 0;
-    [NotifyCanExecuteChangedFor(nameof(TestCommand))]
-    [ObservableProperty]
+
+    [ObservableProperty] private int method = 0;
+
+    [NotifyCanExecuteChangedFor(nameof(TestCommand))] [ObservableProperty]
     private string args = "";
-    [ObservableProperty]
-    private bool isPositive = false;
-    [ObservableProperty]
-    private double eps = 0.001;
-    [NotifyCanExecuteChangedFor(nameof(ExportCommand))]
-    [ObservableProperty]
+
+    [ObservableProperty] private bool isPositive = false;
+    [ObservableProperty] private double eps = 0.001;
+
+    [NotifyCanExecuteChangedFor(nameof(ExportCommand))] [ObservableProperty]
     private string richBoxString = "";
 
-    [ObservableProperty]
-    private bool correct = false;
-
+    [ObservableProperty] private bool correct = false;
 
 
     private bool selectAll = false;
@@ -54,9 +50,12 @@ public partial class MainViewModel : ObservableObject
             {
                 SelectOrDeselectAll();
                 OnPropertyChanged(nameof(Cases));
-
             }
         }
+    }
+
+    private async void RunTestsAsync()
+    {
     }
 
     private void SelectOrDeselectAll()
@@ -65,8 +64,8 @@ public partial class MainViewModel : ObservableObject
         {
             c.Use = SelectAll ? true : false;
             return c;
-        }).ToList(); ;
-
+        }).ToList();
+        ;
     }
 
     private bool CanTest()
@@ -77,6 +76,7 @@ public partial class MainViewModel : ObservableObject
         {
             return false;
         }
+
         try
         {
             _ = GetArgs();
@@ -85,8 +85,10 @@ public partial class MainViewModel : ObservableObject
         {
             return false;
         }
+
         return true;
     }
+
     [RelayCommand(CanExecute = nameof(CanTest))]
     private void Test(Window window)
     {
@@ -96,6 +98,7 @@ public partial class MainViewModel : ObservableObject
         var args = GetArgs();
         GenTestCase(args);
     }
+
     private bool CanStartTest()
     {
         return Cases.Count() != 0;
@@ -110,8 +113,10 @@ public partial class MainViewModel : ObservableObject
         {
             qwe.Remove(c);
         }
+
         Cases = qwe;
     }
+
     [RelayCommand(CanExecute = nameof(CanStartTest))]
     private void StartTest()
     {
@@ -120,8 +125,10 @@ public partial class MainViewModel : ObservableObject
         {
             using Process cmd = new Process();
             cmd.StartInfo.FileName = @"Integral3x.exe";
-            cmd.StartInfo.StandardOutputEncoding = Encoding.GetEncoding(1251); ;
-            cmd.StartInfo.StandardInputEncoding = Encoding.GetEncoding(1251); ;
+            cmd.StartInfo.StandardOutputEncoding = Encoding.GetEncoding(1251);
+            ;
+            cmd.StartInfo.StandardInputEncoding = Encoding.GetEncoding(1251);
+            ;
             cmd.StartInfo.RedirectStandardInput = true;
             cmd.StartInfo.RedirectStandardOutput = true;
             cmd.StartInfo.CreateNoWindow = true;
@@ -155,15 +162,19 @@ public partial class MainViewModel : ObservableObject
                 useCase.IsPassed = useCase.Expected.Replace("YE: ", "") == factMessage;
             }
         }
+
         useCases = useCases.Where(x => x.Use).OrderBy(x => x.IsPositive).ThenBy(x => x.IsPassed).ToList();
         var stringBuilder = new StringBuilder();
         foreach (var useCase in useCases)
         {
             stringBuilder.Append(useCase.ToString());
         }
+
         RichBoxString = stringBuilder.ToString();
     }
+
     private bool CanExport() => !string.IsNullOrEmpty(RichBoxString);
+
     [RelayCommand(CanExecute = nameof(CanExport))]
     private void Export()
     {
@@ -187,11 +198,13 @@ public partial class MainViewModel : ObservableObject
             {
                 step = rnd.NextDoubleLogarithmic(-0.01, 0.0000001);
             }
+
             List<double> paramList = [LeftLimit, RightLimit, step, Method + 1];
             foreach (var arg in args)
             {
                 paramList.Add(arg);
             }
+
             string eps = $"EPS = {Eps}";
             string argLine = $"X = {paramList.GetString()}";
             string expectedMessage = "";
@@ -203,33 +216,33 @@ public partial class MainViewModel : ObservableObject
                 isPos = false;
                 errors = true;
             }
+
             if (step <= 0.000001 || step >= 0.5)
             {
                 expectedMessage = ErrorMessages.StepError;
-
-
             }
+
             if (paramList.Count < 5)
             {
                 expectedMessage = ErrorMessages.ParamNumberError;
                 isPos = false;
                 errors = true;
-
-
             }
+
             if (Method > 2 || Method < 0)
             {
                 expectedMessage = ErrorMessages.MethodError;
                 isPos = false;
                 errors = false;
-
             }
+
             if (string.IsNullOrWhiteSpace(expectedMessage))
             {
                 expectedValue = GetPolynomIntegral(args);
                 expectedMessage = $"S = {expectedValue.ToString("e")}";
                 isPos = true;
             }
+
             expectedMessage = $"YE: {expectedMessage}";
             Cases.Add(new TestCase()
             {
@@ -245,13 +258,12 @@ public partial class MainViewModel : ObservableObject
 
         if (IsPositive && errors)
         {
-
             MessageBox.Show($"{message}.Тип тестов автоматически изменён на негативный!");
         }
+
         if (!IsPositive && !errors)
         {
             MessageBox.Show($"Тип тестов автоматически изменён на позитивный!");
-
         }
 
         Cases = new(Cases.OrderBy(x => x.IsPositive == false).ToList());
@@ -273,7 +285,7 @@ public partial class MainViewModel : ObservableObject
         {
             values.Add(double.Parse(arg));
         }
+
         return values.ToArray();
     }
-
 }
